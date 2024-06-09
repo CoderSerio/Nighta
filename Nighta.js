@@ -44,6 +44,11 @@ class Nighta {
       return env.define(name, this.eval(value, env));
     }
 
+    if (exp[0] === 'set') {
+      const [_, name, value] = exp;
+      return env.assign(name, this.eval(value, env));
+    }
+
     if (isVariableName(exp)) {
       return env.lookUp(exp);
     }
@@ -118,7 +123,6 @@ assert.strictEqual(nighta.eval(
     ['+', ['*', 'x', 'y'], 30],
   ],
 ), 230);
-
 assert.strictEqual(nighta.eval(
   ['begin',
     ['var', 'x', 10],
@@ -129,8 +133,6 @@ assert.strictEqual(nighta.eval(
     'x'
   ],
 ), 10);
-
-
 assert.strictEqual(nighta.eval(
   ['begin',
     ['var', 'x', 10],
@@ -143,6 +145,15 @@ assert.strictEqual(nighta.eval(
     'sum'
   ],
 ), 30);
+assert.strictEqual(nighta.eval(
+  ['begin',
+    ['var', 'x', 10],
+    ['begin',
+      ['set', 'x', ['+', 100, 900]],
+    ],
+    'x'
+  ],
+), 1000);
 
 
 console.log('All Assertions Passed!');
