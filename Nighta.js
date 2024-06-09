@@ -33,6 +33,10 @@ class Nighta {
       return this.eval(exp[1]) / this.eval(exp[2]);
     }
 
+    if (exp[0] === 'begin') {
+      return this._evalBlock(exp, env);
+    }
+
     if (exp[0] === 'var') {
       const [_, name, value] = exp;
       return env.define(name, this.eval(value));
@@ -43,6 +47,17 @@ class Nighta {
     }
 
     throw `Unimplemented Syntax: ${JSON.stringify(exp)}`;
+  }
+
+  _evalBlock(block, env) {
+    let result;
+    const [_, ...expressions] = block;
+
+    expressions.forEach((exp) => {
+      result = this.eval(exp, env);
+    });
+
+    return result;
   }
 }
 
@@ -91,5 +106,15 @@ assert.strictEqual(nighta.eval('z'), true);
 
 assert.strictEqual(nighta.eval(['var', 'a', ['+', 1, 3]]), 4);
 assert.strictEqual(nighta.eval('a'), 4);
+
+
+// Blocks
+assert.strictEqual(nighta.eval(
+  ['begin',
+    ['var', 'x', 10],
+    ['var', 'y', 20],
+    ['+', ['*', 'x', 'y'], 30],
+  ],
+), 230);
 
 console.log('All Assertions Passed!');
