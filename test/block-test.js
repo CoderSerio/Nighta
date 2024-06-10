@@ -1,4 +1,5 @@
 const assert = require("assert");
+const Parser = require('../parser/Parser');
 
 module.exports = (nighta) => {
   assert.strictEqual(nighta.eval(
@@ -39,5 +40,14 @@ module.exports = (nighta) => {
       'x'
     ],
   ), 1000);
-
+  new Parser(nighta).parseTest(
+    `
+    (begin
+      (var x 10)
+      (var y 20)
+      (+ (* x 10) y)
+    )
+    `,
+    120
+  );
 };

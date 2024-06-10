@@ -1,0 +1,1 @@
+syntax-cli --grammar parser/grammar.bnf --mode LALR1 --output parser/grammar.js
