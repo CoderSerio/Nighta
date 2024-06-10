@@ -7,6 +7,7 @@ const tests = [
   require('./variable-test'),
   require('./block-test'),
   require('./if-test'),
+  require('./while-test'),
 ];
 
 const nighta = new Nighta(new Environment({
