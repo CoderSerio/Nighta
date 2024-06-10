@@ -6,7 +6,7 @@ const tests = [
   require('./math-test'),
   require('./variable-test'),
   require('./block-test'),
-  // require('./eval-test'),
+  require('./if-test'),
 ];
 
 const nighta = new Nighta(new Environment({

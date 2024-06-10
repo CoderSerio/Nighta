@@ -9,8 +9,7 @@ module.exports = (nighta) => {
     ],
   ), 230);
   assert.strictEqual(nighta.eval(
-    ['begin', +
-
+    ['begin',
       ['var', 'x', 10],
       ['begin',
         ['var', 'x', 20],

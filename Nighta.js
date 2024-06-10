@@ -7,6 +7,11 @@ class Nighta {
   }
 
   eval(exp, env = this.global) {
+    // console.log('======================================');
+    // console.log(exp);
+    // console.log('____');
+    // console.log(env);
+    // console.log('======================================');
     if (isNumber(exp)) {
       return exp;
     }
@@ -31,23 +36,51 @@ class Nighta {
       return this.eval(exp[1], env) / this.eval(exp[2], env);
     }
 
+    if (exp[0] === '>') {
+      return this.eval(exp[1], env) > this.eval(exp[2], env);
+    }
+
+    if (exp[0] === '>=') {
+      return this.eval(exp[1], env) >= this.eval(exp[2], env);
+    }
+
+    if (exp[0] === '=') {
+      return this.eval(exp[1], env) === this.eval(exp[2], env);
+    }
+
+    if (exp[0] === '<=') {
+      return this.eval(exp[1], env) <= this.eval(exp[2], env);
+    }
+
+    if (exp[0] === '<') {
+      return this.eval(exp[1], env) < this.eval(exp[2], env);
+    }
+
     if (exp[0] === 'begin') {
       const blockEnv = new Environment({}, env);
       return this._evalBlock(exp, blockEnv);
     }
 
     if (exp[0] === 'var') {
-      const [_, name, value] = exp;
+      const [_tag, name, value] = exp;
       return env.define(name, this.eval(value, env));
     }
 
     if (exp[0] === 'set') {
-      const [_, name, value] = exp;
+      const [_tag, name, value] = exp;
       return env.assign(name, this.eval(value, env));
     }
 
     if (isVariableName(exp)) {
       return env.lookUp(exp);
+    }
+
+    if (exp[0] === 'if') {
+      const [_tag, conditon, consequent, alternate] = exp;
+      if (this.eval(conditon, env)) {
+        return this.eval(consequent, env);
+      }
+      return this.eval(alternate, env);
     }
 
     throw `Unimplemented Syntax: ${JSON.stringify(exp)}`;
