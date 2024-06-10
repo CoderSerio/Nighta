@@ -12,48 +12,12 @@ class Nighta {
     // console.log('____');
     // console.log(env);
     // console.log('======================================');
-    if (isNumber(exp)) {
+    if (this._isNumber(exp)) {
       return exp;
     }
 
-    if (isString(exp)) {
+    if (this._isString(exp)) {
       return exp.slice(1, -1);
-    }
-
-    if (exp[0] === '+') {
-      return this.eval(exp[1], env) + this.eval(exp[2], env);
-    }
-
-    if (exp[0] === '*') {
-      return this.eval(exp[1], env) * this.eval(exp[2], env);
-    }
-
-    if (exp[0] === '-') {
-      return this.eval(exp[1], env) - this.eval(exp[2], env);
-    }
-
-    if (exp[0] === '/') {
-      return this.eval(exp[1], env) / this.eval(exp[2], env);
-    }
-
-    if (exp[0] === '>') {
-      return this.eval(exp[1], env) > this.eval(exp[2], env);
-    }
-
-    if (exp[0] === '>=') {
-      return this.eval(exp[1], env) >= this.eval(exp[2], env);
-    }
-
-    if (exp[0] === '=') {
-      return this.eval(exp[1], env) === this.eval(exp[2], env);
-    }
-
-    if (exp[0] === '<=') {
-      return this.eval(exp[1], env) <= this.eval(exp[2], env);
-    }
-
-    if (exp[0] === '<') {
-      return this.eval(exp[1], env) < this.eval(exp[2], env);
     }
 
     if (exp[0] === 'begin') {
@@ -71,7 +35,7 @@ class Nighta {
       return env.assign(name, this.eval(value, env));
     }
 
-    if (isVariableName(exp)) {
+    if (this._isVariableName(exp)) {
       return env.lookUp(exp);
     }
 
@@ -92,6 +56,17 @@ class Nighta {
       return result;
     }
 
+    // Function Call:
+    if (Array.isArray(exp)) {
+      const fn = this.eval(exp[0], env);
+      const args = exp.slice(1).map((arg) => this.eval(arg, env));
+
+      if (typeof fn === 'function') {
+        return fn(...args);
+      }
+
+    }
+
     throw `Unimplemented Syntax: ${JSON.stringify(exp)}`;
   }
 
@@ -105,18 +80,38 @@ class Nighta {
 
     return result;
   }
+
+  _isNumber(exp) {
+    return typeof exp === 'number';
+  }
+
+  _isString(exp) {
+    return typeof exp === 'string' && exp[0] === '"' && exp.slice(-1) === '"';
+  }
+
+  _isVariableName(exp) {
+    return typeof exp === 'string' && (/^[+\-*/<>=a-zA-Z0-9_]*$/.test(exp));
+  }
 }
 
-function isNumber(exp) {
-  return typeof exp === 'number';
-}
+const nighta = new Nighta(new Environment({
+  null: null,
+  true: true,
+  false: false,
+  undefined: undefined,
+  // TODO: Optimize
+  '+': (v1, v2) => v1 + v2,
+  '-': (v1, v2) => v1 - v2,
+  '*': (v1, v2) => v1 * v2,
+  '/': (v1, v2) => v1 / v2,
+  '%': (v1, v2) => v1 % v2,
+  '>': (v1, v2) => v1 > v2,
+  '>=': (v1, v2) => v1 >= v2,
+  '=': (v1, v2) => v1 === v2,
+  '<=': (v1, v2) => v1 <= v2,
+  '<': (v1, v2) => v1 < v2,
+  say: (...args) => { console.log(...args); }
+}));
 
-function isString(exp) {
-  return typeof exp === 'string' && exp[0] === '"' && exp.slice(-1) === '"';
-}
 
-function isVariableName(exp) {
-  return typeof exp === 'string' && (/^[a-zA-Z][a-zA-Z0-9]*$/.test(exp));
-}
-
-module.exports = Nighta;
+module.exports = nighta;

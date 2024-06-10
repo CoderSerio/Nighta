@@ -1,6 +1,8 @@
 const assert = require('assert');
 const grammar = require('./grammar');
 
+const EMPTY_EXPECTED = 'HERE_IS_NO_EXPECTED, WHY?';
+
 class Parser {
   constructor(nighta,) {
     this.nighta = nighta;
@@ -11,10 +13,13 @@ class Parser {
     return exp;
   }
 
-  parseTest(code, expected) {
+  parseTest(code, expected = EMPTY_EXPECTED) {
     const exp = this.parse(code);
-    const res = this.nighta.eval(exp);
-    assert.strictEqual(res, expected);
+    if (expected === EMPTY_EXPECTED) {
+      assert.doesNotThrow(() => this.nighta.eval(exp));
+    } else {
+      assert.strictEqual(this.nighta.eval(exp), expected);
+    }
   }
 }
 

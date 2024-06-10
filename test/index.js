@@ -1,5 +1,4 @@
-const Nighta = require('../Nighta');
-const Environment = require('../Environment');
+const nighta = require('../Nighta');
 
 const tests = [
   require('./eval-test'),
@@ -8,17 +7,14 @@ const tests = [
   require('./block-test'),
   require('./if-test'),
   require('./while-test'),
+  require('./build-in-function-test'),
 ];
-
-const nighta = new Nighta(new Environment({
-  null: null,
-  true: true,
-  false: false,
-  undefined: undefined
-}));
 
 tests.forEach((test) => {
   test(nighta);
 });
 
-console.log('All Assertions Passed!');
+console.log('\n');
+console.log('='.repeat(21));
+console.log('All Assertions Passed');
+console.log('='.repeat(21));
