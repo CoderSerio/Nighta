@@ -44,10 +44,10 @@ module.exports = (nighta) => {
     `
     (begin
       (var x 10)
-      (var y 20)
+      (var y "86")
       (+ (* x 10) y)
     )
     `,
-    120
+    "10086"
   );
 };
