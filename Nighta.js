@@ -56,23 +56,53 @@ class Nighta {
       return result;
     }
 
+    if (exp[0] === 'fun') {
+      const [_tag, name, params, body] = exp;
+      const fn = {
+        params,
+        body,
+        env
+      };
+
+      return env.define(name, fn);
+    }
+
     // Function Call:
     if (Array.isArray(exp)) {
       const fn = this.eval(exp[0], env);
       const args = exp.slice(1).map((arg) => this.eval(arg, env));
-
-      if (typeof fn === 'function') {
+      if (typeof fn === 'function') { // build-in functions
         return fn(...args);
-      }
+      } else if (fn.body && fn.env) { // user-defined functions
+        // copy the params
+        const activationRecord = {};
+        fn.params?.forEach((param, index) => {
+          activationRecord[param] = args[index];
+        });
 
+        const activationEnvironment = new Environment(
+          activationRecord,
+          fn.env // static scope, where the function declared
+        );
+
+        return this._evalFunctionBody(fn.body, activationEnvironment);
+      }
     }
 
     throw `Unimplemented Syntax: ${JSON.stringify(exp)}`;
   }
 
+  _evalFunctionBody(body, env) {
+    // avoid handling the blocks in a function incorrectly
+    if (body[0] === 'begin') {
+      return this._evalBlock(body, env);
+    }
+    return this.eval(body, env);
+  }
+
   _evalBlock(block, env) {
     let result;
-    const [_, ...expressions] = block;
+    const [_tag, ...expressions] = block;
 
     expressions.forEach((exp) => {
       result = this.eval(exp, env);
@@ -99,7 +129,6 @@ const nighta = new Nighta(new Environment({
   true: true,
   false: false,
   undefined: undefined,
-  // TODO: Optimize
   '+': (v1, v2) => v1 + v2,
   '-': (v1, v2) => v1 - v2,
   '*': (v1, v2) => v1 * v2,

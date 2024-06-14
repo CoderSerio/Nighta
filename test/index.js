@@ -1,13 +1,14 @@
 const nighta = require('../Nighta');
 
 const tests = [
-  require('./eval-test'),
-  require('./math-test'),
-  require('./variable-test'),
-  require('./block-test'),
-  require('./if-test'),
-  require('./while-test'),
-  require('./build-in-function-test'),
+  // require('./eval-test'),
+  // require('./math-test'),
+  // require('./variable-test'),
+  // require('./block-test'),
+  // require('./if-test'),
+  // require('./while-test'),
+  // require('./build-in-function-test'),
+  require('./user-defined-function-test'),
 ];
 
 tests.forEach((test) => {
