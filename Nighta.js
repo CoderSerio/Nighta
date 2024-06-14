@@ -57,14 +57,21 @@ class Nighta {
     }
 
     if (exp[0] === 'fun') {
-      const [_tag, name, params, body] = exp;
-      const fn = {
-        params,
-        body,
-        env
-      };
-
-      return env.define(name, fn);
+      if (exp.length === 4) { // normal function
+        const [_tag, name, params, body] = exp;
+        return env.define(name, {
+          params,
+          body,
+          env
+        });
+      } else { // lambda function
+        const [_tag, params, body] = exp;
+        return {
+          params,
+          body,
+          env
+        };
+      }
     }
 
     // Function Call:
