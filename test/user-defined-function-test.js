@@ -67,4 +67,18 @@ module.exports = (nighta) => {
     )
     `,
   );
+  // recursive
+  new Parser(nighta).parseTest(
+    `
+    (begin
+      (fun sum (x)
+        (if (= x 1)
+          1
+          (+ x (sum (- x 1)))
+        ) 
+      )
+      (say (sum 10))
+    )
+    `,
+  );
 };
