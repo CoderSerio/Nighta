@@ -1,7 +1,8 @@
 const Parser = require('../parser/Parser');
 
 module.exports = (nighta) => {
-  new Parser(nighta).parseTest(
+  const parser = new Parser(nighta);
+  parser.parseTest(
     `
     (begin
       (fun onClick (callback) (begin
@@ -15,7 +16,7 @@ module.exports = (nighta) => {
   );
 
   // IILE
-  new Parser(nighta).parseTest(
+  parser.parseTest(
     `
     (begin
       (
@@ -26,7 +27,7 @@ module.exports = (nighta) => {
     `,
   );
 
-  new Parser(nighta).parseTest(
+  parser.parseTest(
     `
     (begin
       (var sayHi (fun (msg) (say msg)))

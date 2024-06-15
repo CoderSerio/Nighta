@@ -5,12 +5,13 @@ const tests = [
   require('./math-test'),
   require('./variable-test'),
   require('./block-test'),
-  require('./if-test'),
   require('./while-test'),
   require('./build-in-function-test'),
+  require('./if-test'),
   require('./user-defined-function-test'),
   require('./lambda-function-test'),
-  require('./switch-test')
+  require('./switch-test'),
+  require('./class-test')
 ];
 
 tests.forEach((test) => {

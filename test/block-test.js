@@ -2,6 +2,7 @@ const assert = require("assert");
 const Parser = require('../parser/Parser');
 
 module.exports = (nighta) => {
+  const parser = new Parser(nighta);
   assert.strictEqual(nighta.eval(
     ['begin',
       ['var', 'x', 10],
@@ -40,7 +41,7 @@ module.exports = (nighta) => {
       'x'
     ],
   ), 1000);
-  new Parser(nighta).parseTest(
+  parser.parseTest(
     `
     (begin
       (var x 10)

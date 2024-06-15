@@ -33,8 +33,17 @@ class Nighta {
     }
 
     if (exp[0] === 'set') {
-      const [_tag, name, value] = exp;
-      return env.assign(name, this.eval(value, env));
+      const [_tag, target, originalValue] = exp;
+      const value = this.eval(originalValue, env);
+      // If the target is a class
+      if (target[0] === 'prop') {
+        const [_tag, instanceName, propertyName] = target;
+        const instanceEnv = this.eval(instanceName, env);
+        // Why not `assign`? --- `assign` is used to change the variable in self and parent scope.
+        // In a class, we use keyword `set` to create a variable so we use define here.
+        return instanceEnv.define(propertyName, value);
+      }
+      return env.assign(target, value);
     }
 
     if (this._isVariableName(exp)) {
@@ -81,29 +90,66 @@ class Nighta {
       }
     }
 
+    if (exp[0] === 'class') {
+      const [_tag, className, parent, body] = exp;
+      const parentClassEnv = this.eval(parent, env);
+      // Class is a kind of environment, which has a individual scope
+      // And its parent would be replaced with global environment if it is null
+      const classEnv = new Environment({}, parentClassEnv || env);
+      this._evalFunctionBody(body, classEnv);
+      return env.define(className, classEnv);
+    }
+
+    if (exp[0] === 'new') {
+      console.log('new', exp);
+      const [_tag, className, ...originalArgs] = exp;
+      const classEnv = this.eval(className, env);
+      // As the same, instance of a class is also a kind of environment, and its parent is the class
+      const instanceEnv = new Environment({}, classEnv);
+      classEnv.define('self', instanceEnv);
+
+      const constructor = classEnv.lookUp('constructor');
+      const args = originalArgs.map((arg) => this.eval(arg, env));
+      // TODO: there would be a overwrite if variable name is `self`
+      this._callUserDefinedFunction(constructor, args);
+      return instanceEnv;
+    }
+
+    if (exp[0] === 'prop') {
+      const [_tag, instanceName, propertyName] = exp;
+      const instanceEnv = this.eval(instanceName, env);
+      return instanceEnv.lookUp(propertyName);
+    }
+
     // Function Call:
     if (Array.isArray(exp)) {
-      const fn = this.eval(exp[0], env);
-      const args = exp.slice(1).map((arg) => this.eval(arg, env));
+      const [name, ...originalArgs] = exp;
+      const fn = this.eval(name, env);
+      const args = originalArgs.map((arg) => this.eval(arg, env));
+
       if (typeof fn === 'function') { // build-in functions
         return fn(...args);
       } else if (fn.body && fn.env) { // user-defined functions
-        // copy the params
-        const activationRecord = {};
-        fn.params?.forEach((param, index) => {
-          activationRecord[param] = args[index];
-        });
-
-        const activationEnvironment = new Environment(
-          activationRecord,
-          fn.env // static scope, where the function declared
-        );
-
-        return this._evalFunctionBody(fn.body, activationEnvironment);
+        return this._callUserDefinedFunction(fn, args);
       }
     }
 
     throw `Unimplemented Syntax: ${JSON.stringify(exp)}`;
+  }
+
+  _callUserDefinedFunction(fn, args) {
+    // copy the prams
+    const activationRecord = {};
+    fn.params?.forEach((param, index) => {
+      activationRecord[param] = args[index];
+    });
+
+    const activationEnvironment = new Environment(
+      activationRecord,
+      fn.env // static scope, where the function declared
+    );
+
+    return this._evalFunctionBody(fn.body, activationEnvironment);
   }
 
   _evalFunctionBody(body, env) {
@@ -153,7 +199,7 @@ const nighta = new Nighta(new Environment({
   '=': (v1, v2) => v1 === v2,
   '<=': (v1, v2) => v1 <= v2,
   '<': (v1, v2) => v1 < v2,
-  say: (...args) => { console.log(...args); }
+  say: (...args) => { console.log(...args); },
 }));
 
 
