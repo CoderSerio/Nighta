@@ -1,9 +1,11 @@
 const Environment = require("./Environment");
+const Transformer = require("./transformer/Transformer");
 
 class Nighta {
   constructor(global = new Environment(), parent = null) {
     this.global = global;
     this.parent = parent;
+    this.transformer = new Transformer();
   }
 
   eval(exp, env = this.global) {
@@ -40,11 +42,16 @@ class Nighta {
     }
 
     if (exp[0] === 'if') {
-      const [_tag, conditon, consequent, alternate] = exp;
-      if (this.eval(conditon, env)) {
+      const [_tag, condition, consequent, alternate] = exp;
+      if (this.eval(condition, env)) {
         return this.eval(consequent, env);
       }
       return this.eval(alternate, env);
+    }
+
+    if (exp[0] === 'switch') {
+      const ifExp = this.transformer.transformSwitch(exp);
+      return this.eval(ifExp, env);
     }
 
     if (exp[0] === 'while') {

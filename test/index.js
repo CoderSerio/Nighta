@@ -10,6 +10,7 @@ const tests = [
   require('./build-in-function-test'),
   require('./user-defined-function-test'),
   require('./lambda-function-test'),
+  require('./switch-test')
 ];
 
 tests.forEach((test) => {
