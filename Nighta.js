@@ -105,16 +105,21 @@ class Nighta {
       const classEnv = this.eval(className, env);
       // As the same, instance of a class is also a kind of environment, and its parent is the class
       const instanceEnv = new Environment({}, classEnv);
+      console.log('instanceEnv', instanceEnv, instanceEnv.parent);
       instanceEnv.define('self', instanceEnv);
       Object.keys(classEnv.record).forEach((key) => {
         const originalValue = classEnv.record[key];
         let value;
         // In our AST, function is processed to a kind of object
         if (originalValue instanceof Object) {
+          // if (Array.isArray(originalValue)) {
+          //   value = [...originalValue]
+          // } else {
           value = { ...originalValue };
           if (value.env) {
             value.env = instanceEnv;
           }
+          // }
         } else {
           value = originalValue;
         }
@@ -144,7 +149,6 @@ class Nighta {
       if (typeof fn === 'function') { // build-in functions
         return fn(...args);
       } else if (fn.body && fn.env) { // user-defined functions
-        // TODO: check is inside a class environment
         return this._callUserDefinedFunction(fn, args, fn.env);
       }
     }

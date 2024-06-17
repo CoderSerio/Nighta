@@ -53,7 +53,7 @@ module.exports = (nighta) => {
     `
   );
 
-
+  // Individual instance and its property 
   parser.parseTest(
     `
       (begin
@@ -73,6 +73,37 @@ module.exports = (nighta) => {
         (var person2 (new Person 2))
         ((prop person1 info))
         ((prop person2 info))
+      )
+    `
+  );
+
+  // 
+  parser.parseTest(
+    `
+      (begin
+        (class Person null
+          (begin
+            (fun constructor (x)
+              (set (prop self x) x)
+            )
+
+            (fun info () 
+              (say (prop self x))
+            )
+          )
+        )
+
+        (class Worker (Person)
+          (begin
+            (fun constructor () 
+              (begin
+                (say super)
+              )
+            )
+          )  
+        )
+
+        (new Worker)
       )
     `
   );
