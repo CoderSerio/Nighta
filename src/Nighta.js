@@ -1,4 +1,4 @@
-const Environment = require("./environment/Environment");
+const Environment = require("../environment/Environment");
 const Transformer = require("./transformer/Transformer");
 
 class Nighta {
