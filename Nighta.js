@@ -95,23 +95,37 @@ class Nighta {
       const parentClassEnv = this.eval(parent, env);
       // Class is a kind of environment, which has a individual scope
       // And its parent would be replaced with global environment if it is null
-      const classEnv = new Environment({}, parentClassEnv || env);
+      const classEnv = new Environment({ _className: className }, parentClassEnv || env);
       this._evalFunctionBody(body, classEnv);
       return env.define(className, classEnv);
     }
 
     if (exp[0] === 'new') {
-      console.log('new', exp);
       const [_tag, className, ...originalArgs] = exp;
       const classEnv = this.eval(className, env);
       // As the same, instance of a class is also a kind of environment, and its parent is the class
       const instanceEnv = new Environment({}, classEnv);
-      classEnv.define('self', instanceEnv);
+      instanceEnv.define('self', instanceEnv);
+      Object.keys(classEnv.record).forEach((key) => {
+        const originalValue = classEnv.record[key];
+        let value;
+        // In our AST, function is processed to a kind of object
+        if (originalValue instanceof Object) {
+          value = { ...originalValue };
+          if (value.env) {
+            value.env = instanceEnv;
+          }
+        } else {
+          value = originalValue;
+        }
 
-      const constructor = classEnv.lookUp('constructor');
+        instanceEnv.define(key, value);
+      });
+
+      const constructor = instanceEnv.lookUp('constructor');
       const args = originalArgs.map((arg) => this.eval(arg, env));
       // TODO: there would be a overwrite if variable name is `self`
-      this._callUserDefinedFunction(constructor, args);
+      this._callUserDefinedFunction(constructor, args, instanceEnv);
       return instanceEnv;
     }
 
@@ -130,14 +144,15 @@ class Nighta {
       if (typeof fn === 'function') { // build-in functions
         return fn(...args);
       } else if (fn.body && fn.env) { // user-defined functions
-        return this._callUserDefinedFunction(fn, args);
+        // TODO: check is inside a class environment
+        return this._callUserDefinedFunction(fn, args, fn.env);
       }
     }
 
     throw `Unimplemented Syntax: ${JSON.stringify(exp)}`;
   }
 
-  _callUserDefinedFunction(fn, args) {
+  _callUserDefinedFunction(fn, args, env) {
     // copy the prams
     const activationRecord = {};
     fn.params?.forEach((param, index) => {
@@ -146,7 +161,7 @@ class Nighta {
 
     const activationEnvironment = new Environment(
       activationRecord,
-      fn.env // static scope, where the function declared
+      env
     );
 
     return this._evalFunctionBody(fn.body, activationEnvironment);

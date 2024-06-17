@@ -16,7 +16,6 @@ module.exports = (nighta) => {
             )
             (fun sum ()
               (begin
-                (say self) 
                 (var res 
                   (+ (prop self x) (prop self y)))
                 (say (+ "The res is " res))
@@ -27,6 +26,53 @@ module.exports = (nighta) => {
 
         (var person (new Person 10 20))
         ((prop person sum))
+      )
+    `
+  );
+
+  parser.parseTest(
+    `
+      (begin
+        (class Person null
+          (begin
+            (fun constructor (x)
+              (set (prop self x) x)
+            )
+          )
+        )
+
+        (var person1 (new Person 1))
+        (var person2 (new Person 2))
+        (say (prop person1 x))
+        (say (prop person2 x))
+        (say (prop person1 x))
+        (set (prop person1 x) 3)
+        (say (prop person1 x))        
+        (say (prop person2 x))        
+      )
+    `
+  );
+
+
+  parser.parseTest(
+    `
+      (begin
+        (class Person null
+          (begin
+            (fun constructor (x)
+              (set (prop self x) x)
+            )
+
+            (fun info () 
+              (say (prop self x))
+            )
+          )
+        )
+        (say "-----")
+        (var person1 (new Person 1))
+        (var person2 (new Person 2))
+        ((prop person1 info))
+        ((prop person2 info))
       )
     `
   );
