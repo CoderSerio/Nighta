@@ -88,7 +88,7 @@ module.exports = (nighta) => {
             )
 
             (fun info () 
-              (say (+ "This is OOP: " (prop self x)))
+              (say (+ "This is OOP: " x))
             )
           )
         )
