@@ -1,4 +1,4 @@
-const Environment = require("./Environment");
+const Environment = require("./environment/Environment");
 const Transformer = require("./transformer/Transformer");
 
 class Nighta {
@@ -46,10 +46,6 @@ class Nighta {
       return env.assign(target, value);
     }
 
-    if (this._isVariableName(exp)) {
-      return env.lookUp(exp);
-    }
-
     if (exp[0] === 'if') {
       const [_tag, condition, consequent, alternate] = exp;
       if (this.eval(condition, env)) {
@@ -92,10 +88,33 @@ class Nighta {
 
     if (exp[0] === 'class') {
       const [_tag, className, parent, body] = exp;
-      const parentClassEnv = this.eval(parent, env);
+      const parentClassEnv = this.eval(parent, env); // maybe null
+      const record = {};
+
+
       // Class is a kind of environment, which has a individual scope
       // And its parent would be replaced with global environment if it is null
+      // super: parentClassEnv
       const classEnv = new Environment({ _className: className }, parentClassEnv || env);
+      if (parentClassEnv) {
+        Object.keys(parentClassEnv.record).forEach((key) => {
+          const parentRecordValue = parentClassEnv.record[key];
+          const recordValue = classEnv.record[key];
+          let value;
+          if (key === 'constructor') {
+            value = {
+              params: [...parentRecordValue.params, recordValue.params],
+              body: [...parentRecordValue.body, recordValue.body],
+              env: parentClassEnv
+            };
+            classEnv.define(key, value);
+          } else {
+            value = recordValue ?? parentRecordValue;
+          }
+          classEnv.define(key, value);
+        });
+      }
+
       this._evalFunctionBody(body, classEnv);
       return env.define(className, classEnv);
     }
@@ -105,21 +124,17 @@ class Nighta {
       const classEnv = this.eval(className, env);
       // As the same, instance of a class is also a kind of environment, and its parent is the class
       const instanceEnv = new Environment({}, classEnv);
-      console.log('instanceEnv', instanceEnv, instanceEnv.parent);
       instanceEnv.define('self', instanceEnv);
-      Object.keys(classEnv.record).forEach((key) => {
-        const originalValue = classEnv.record[key];
+      const instanceRecord = { ...classEnv.parent?.record, ...classEnv.record };
+      Object.keys(instanceRecord).forEach((key) => {
+        const originalValue = instanceRecord[key];
         let value;
         // In our AST, function is processed to a kind of object
         if (originalValue instanceof Object) {
-          // if (Array.isArray(originalValue)) {
-          //   value = [...originalValue]
-          // } else {
           value = { ...originalValue };
           if (value.env) {
             value.env = instanceEnv;
           }
-          // }
         } else {
           value = originalValue;
         }
@@ -138,6 +153,16 @@ class Nighta {
       const [_tag, instanceName, propertyName] = exp;
       const instanceEnv = this.eval(instanceName, env);
       return instanceEnv.lookUp(propertyName);
+    }
+
+    if (exp[0] === 'super') {
+      const [_tag, className] = exp;
+      const classEnv = this.eval(className, env);
+      return classEnv.parent;
+    }
+
+    if (this._isVariableName(exp)) {
+      return env.lookUp(exp);
     }
 
     // Function Call:
@@ -182,7 +207,6 @@ class Nighta {
   _evalBlock(block, env) {
     let result;
     const [_tag, ...expressions] = block;
-
     expressions.forEach((exp) => {
       result = this.eval(exp, env);
     });

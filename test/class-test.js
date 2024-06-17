@@ -88,22 +88,22 @@ module.exports = (nighta) => {
             )
 
             (fun info () 
-              (say (prop self x))
+              (say (+ "This is OOP: " (prop self x)))
             )
           )
         )
 
-        (class Worker (Person)
+        (class Worker Person
           (begin
             (fun constructor () 
               (begin
-                (say super)
+                (info)
               )
             )
           )  
         )
 
-        (new Worker)
+        (new Worker 10)
       )
     `
   );
