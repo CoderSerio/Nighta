@@ -29,7 +29,6 @@ const route = useRoute();
 .menu-wrapper {
   display: flex;
   height: 60px;
-  width: 100vw;
 }
 
 .menu-item {
