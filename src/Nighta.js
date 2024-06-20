@@ -37,7 +37,7 @@ class Nighta {
       return env.define(name, this.eval(value, env));
     }
 
-    if (exp[0] === '=' && exp[1] !== '=') {
+    if (exp[0] === '=' && exp !== '==') {
       const [_tag, target, originalValue] = exp;
       const value = this.eval(originalValue, env);
       // If the target is a class
@@ -168,7 +168,15 @@ class Nighta {
 
     // Function Call:
     if (Array.isArray(exp)) {
-      const [name, ...originalArgs] = exp;
+      let name, originalArgs;
+      if (['+', '-', '*', '/', '%', '&&', '||', '&', '|', '>', '>=', '==', '<=', '<'].includes(exp[1])) {
+        const [leftValue, operator, rightValue] = exp;
+        name = operator;
+        originalArgs = [leftValue, rightValue];
+      } else {
+        [name, ...originalArgs] = exp;
+      }
+
       const fn = this.eval(name, env);
       const args = originalArgs.map((arg) => this.eval(arg, env));
 
@@ -243,6 +251,10 @@ const nighta = new Nighta(new Environment({
   '==': (v1, v2) => v1 === v2,
   '<=': (v1, v2) => v1 <= v2,
   '<': (v1, v2) => v1 < v2,
+  '&&': (v1, v2) => v1 && v2,
+  '||': (v1, v2) => v1 || v2,
+  '&': (v1, v2) => v1 & v2,
+  '|': (v1, v2) => v1 | v2,
   say: (...args) => {
     const res = args.reduce((prev, cur) => prev + cur, '');
     console.log(res);

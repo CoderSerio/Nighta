@@ -6,7 +6,7 @@ module.exports = (nighta) => {
     (begin
       (var msg1 "Hello,")
       (var msg2 "World!")
-      (say (+ msg1 msg2))
+      (say (msg1 + msg2))
     )
     `,
   );
