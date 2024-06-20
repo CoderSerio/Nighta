@@ -1,11 +1,16 @@
-const Environment = require("../environment/Environment");
+const Environment = require("./environment/Environment");
 const Transformer = require("./transformer/Transformer");
+const Parser = require('./parser/Parser');
 
 class Nighta {
   constructor(global = new Environment(), parent = null) {
     this.global = global;
     this.parent = parent;
     this.transformer = new Transformer();
+    this.parser = new Parser(this);
+  }
+  parse(code) {
+    return this.parser.parse(code);
   }
 
   eval(exp, env = this.global) {
@@ -32,7 +37,7 @@ class Nighta {
       return env.define(name, this.eval(value, env));
     }
 
-    if (exp[0] === 'set') {
+    if (exp[0] === '=' && exp[1] !== '=') {
       const [_tag, target, originalValue] = exp;
       const value = this.eval(originalValue, env);
       // If the target is a class
@@ -89,12 +94,8 @@ class Nighta {
     if (exp[0] === 'class') {
       const [_tag, className, parent, body] = exp;
       const parentClassEnv = this.eval(parent, env); // maybe null
-      const record = {};
-
-
       // Class is a kind of environment, which has a individual scope
       // And its parent would be replaced with global environment if it is null
-      // super: parentClassEnv
       const classEnv = new Environment({ _className: className }, parentClassEnv || env);
       if (parentClassEnv) {
         Object.keys(parentClassEnv.record).forEach((key) => {
@@ -239,10 +240,14 @@ const nighta = new Nighta(new Environment({
   '%': (v1, v2) => v1 % v2,
   '>': (v1, v2) => v1 > v2,
   '>=': (v1, v2) => v1 >= v2,
-  '=': (v1, v2) => v1 === v2,
+  '==': (v1, v2) => v1 === v2,
   '<=': (v1, v2) => v1 <= v2,
   '<': (v1, v2) => v1 < v2,
-  say: (...args) => { console.log(...args); },
+  say: (...args) => {
+    const res = args.reduce((prev, cur) => prev + cur, '');
+    console.log(res);
+    return res;
+  },
 }));
 
 

@@ -10,8 +10,8 @@ module.exports = (nighta) => {
             (fun constructor (x y)
               (begin
                 (say "constructor!")
-                (set (prop self x) x)
-                (set (prop self y) y)
+                (= (prop self x) x)
+                (= (prop self y) y)
               )
             )
             (fun sum ()
@@ -36,7 +36,7 @@ module.exports = (nighta) => {
         (class Person null
           (begin
             (fun constructor (x)
-              (set (prop self x) x)
+              (= (prop self x) x)
             )
           )
         )
@@ -46,7 +46,7 @@ module.exports = (nighta) => {
         (say (prop person1 x))
         (say (prop person2 x))
         (say (prop person1 x))
-        (set (prop person1 x) 3)
+        (= (prop person1 x) 3)
         (say (prop person1 x))        
         (say (prop person2 x))        
       )
@@ -60,7 +60,7 @@ module.exports = (nighta) => {
         (class Person null
           (begin
             (fun constructor (x)
-              (set (prop self x) x)
+              (= (prop self x) x)
             )
 
             (fun info () 
@@ -84,7 +84,7 @@ module.exports = (nighta) => {
         (class Person null
           (begin
             (fun constructor (x)
-              (set (prop self x) x)
+              (= (prop self x) x)
             )
 
             (fun info () 

@@ -8,8 +8,8 @@ module.exports = (nighta) => {
     ['while',
       ['<=', 'counter', 10],
       ['begin',
-        ['set', 'result', ['+', 'result', 'counter']],
-        ['set', 'counter', ['+', 'counter', 1]]
+        ['=', 'result', ['+', 'result', 'counter']],
+        ['=', 'counter', ['+', 'counter', 1]]
       ]
     ],
     'result'

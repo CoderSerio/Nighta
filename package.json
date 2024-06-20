@@ -2,11 +2,29 @@
   "name": "nighta",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "lib/cjs/index.cjs.js",
+  "module": "lib/esm/index.esm.js",
+  "browser": "lib/umd/index.umd.js",
   "scripts": {
-    "test": "node src/test/index.js"
+    "test": "node src/test/index.js",
+    "build": "rollup -c"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "monaco-editor": "^0.49.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-babel": "^6.0.3",
+    "@rollup/plugin-commonjs": "^18.0.0",
+    "rollup": "^2.45.1",
+    "rollup-plugin-filesize": "^10.0.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-terser": "^7.0.2"
+  },
+  "files": [
+    "lib",
+    "README.md"
+  ]
 }
