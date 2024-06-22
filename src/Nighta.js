@@ -28,6 +28,10 @@ class Nighta {
       return exp.slice(1, -1);
     }
 
+    if (this._isUndefined(exp)) {
+      return undefined;
+    }
+
     if (exp[0] === 'block') {
       const blockEnv = new Environment({}, env);
       return this._evalBlock(exp, blockEnv);
@@ -39,19 +43,19 @@ class Nighta {
       return env.define(name, this.eval(value, env));
     }
 
-    if (exp[0] === '=' && exp !== '==') {
-      const [_tag, target, originalValue] = exp;
-      const value = this.eval(originalValue, env);
-      // If the target is a class
-      if (target[0] === 'prop') {
-        const [_tag, instanceName, propertyName] = target;
-        const instanceEnv = this.eval(instanceName, env);
-        // Why not `assign`? --- `assign` is used to change the variable in self and parent scope.
-        // In a class, we use keyword `set` to create a variable so we use define here.
-        return instanceEnv.define(propertyName, value);
-      }
-      return env.assign(target, value);
-    }
+    // if (exp[1] === '=' && exp !== '==') {
+    //   const [_tag, target, originalValue] = exp;
+    //   const value = this.eval(originalValue, env);
+    //   // If the target is a class
+    //   if (target[0] === 'prop') {
+    //     const [_tag, instanceName, propertyName] = target;
+    //     const instanceEnv = this.eval(instanceName, env);
+    //     // Why not `assign`? --- `assign` is used to change the variable in self and parent scope.
+    //     // In a class, we use keyword `set` to create a variable so we use define here.
+    //     return instanceEnv.define(propertyName, value);
+    //   }
+    //   return env.assign(target, value);
+    // }
 
     if (exp[0] === 'if') {
       const [_tag, condition, consequent, alternate] = exp;
@@ -105,9 +109,10 @@ class Nighta {
           const recordValue = classEnv.record[key];
           let value;
           if (key === 'constructor') {
+            const mixedBody = ['block', [...(parentRecordValue?.body?.[1] ?? []), ...(recordValue.body?.[1] ?? [])]];
             value = {
-              params: [...parentRecordValue.params, recordValue.params],
-              body: [...parentRecordValue.body, recordValue.body],
+              params: [...parentRecordValue.params, ...(recordValue?.params ?? [])],
+              body: mixedBody,
               env: parentClassEnv
             };
             classEnv.define(key, value);
@@ -153,8 +158,14 @@ class Nighta {
     }
 
     if (exp[0] === 'prop') {
-      const [_tag, instanceName, propertyName] = exp;
+      const [_tag, instanceName, originPropertyName] = exp;
       const instanceEnv = this.eval(instanceName, env);
+      let propertyName;
+      if (this._isString(originPropertyName)) {
+        propertyName = originPropertyName.slice(1, -1);
+      } else {
+        propertyName = this.eval(originPropertyName, env);
+      }
       return instanceEnv.lookUp(propertyName);
     }
 
@@ -171,6 +182,26 @@ class Nighta {
     // Function Call:
     if (Array.isArray(exp)) {
       let name, originalArgs;
+      if (exp[1] === '=') {
+        const [target, _tag, originalValue] = exp;
+        const value = this.eval(originalValue, env);
+        // If the target is a class
+        if (target[0] === 'prop') {
+          const [_tag, instanceName, originalPropertyName] = target;
+          const instanceEnv = this.eval(instanceName, env);
+          // Why not `assign`? --- `assign` is used to change the variable in self and parent scope.
+          // In a class, we use keyword `set` to create a variable so we use define here.
+          let propertyName;
+          if (this._isString(originalPropertyName)) {
+            propertyName = originalPropertyName.slice(1, -1);
+          } else {
+            propertyName = this.eval(originalPropertyName, env);
+          }
+          return instanceEnv.define(propertyName, value);
+        }
+        return env.assign(target, value);
+      }
+
       if (['+', '-', '*', '/', '%', '&&', '||', '&', '|', '>', '>=', '==', '<=', '<'].includes(exp[1])) {
         const [leftValue, operator, rightValue] = exp;
         name = operator;
@@ -233,6 +264,10 @@ class Nighta {
     return typeof exp === 'string' && exp[0] === '"' && exp.slice(-1) === '"';
   }
 
+  _isUndefined(exp) {
+    return exp === undefined;
+  }
+
   _isVariableName(exp) {
     return typeof exp === 'string' && (/^[+\-*/<>=a-zA-Z0-9_]*$/.test(exp));
   }
@@ -258,8 +293,8 @@ const nighta = new Nighta(new Environment({
   '&': (v1, v2) => v1 & v2,
   '|': (v1, v2) => v1 | v2,
   say: (...args) => {
-    const res = args.reduce((prev, cur) => prev + cur, '');
-    console.log(res);
+    const res = args.reduce((prev, cur) => prev + cur);
+    console.dir(res, { depth: null });
     return res;
   },
 }));
