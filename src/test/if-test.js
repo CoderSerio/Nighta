@@ -3,18 +3,6 @@ const Parser = require('../parser/Parser');
 
 module.exports = (nighta) => {
   const parser = new Parser(nighta);
-  assert.strictEqual(nighta.eval(
-    ['block',
-      ['var', 'x', 10],
-      ['var', 'y', 10],
-      ['if',
-        ['>=', 'x', 1],
-        ['=', 'y', 1],
-        ['=', 'y', 2],
-      ],
-      'y'
-    ]
-  ), 1);
 
   parser.parseTest(
     `

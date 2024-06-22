@@ -59,4 +59,5 @@ PropertyName
   : List
   | STRING
   | Number { $$ = String($1) }
+  | SYMBOL
   ;
