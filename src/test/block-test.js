@@ -4,16 +4,16 @@ const Parser = require('../parser/Parser');
 module.exports = (nighta) => {
   const parser = new Parser(nighta);
   assert.strictEqual(nighta.eval(
-    ['begin',
+    ['block',
       ['var', 'x', 10],
       ['var', 'y', 20],
       ['+', ['*', 'x', 'y'], 30],
     ],
   ), 230);
   assert.strictEqual(nighta.eval(
-    ['begin',
+    ['block',
       ['var', 'x', 10],
-      ['begin',
+      ['block',
         ['var', 'x', 20],
         'x'
       ],
@@ -21,10 +21,10 @@ module.exports = (nighta) => {
     ],
   ), 10);
   assert.strictEqual(nighta.eval(
-    ['begin',
+    ['block',
       ['var', 'x', 10],
       ['var', 'sum',
-        ['begin',
+        ['block',
           ['var', 'y', ['+', 'x', 20]],
           'y'
         ],
@@ -33,9 +33,9 @@ module.exports = (nighta) => {
     ],
   ), 30);
   assert.strictEqual(nighta.eval(
-    ['begin',
+    ['block',
       ['var', 'x', 10],
-      ['begin',
+      ['block',
         ['=', 'x', ['+', 100, 900]],
       ],
       'x'
@@ -43,12 +43,22 @@ module.exports = (nighta) => {
   ), 1000);
   parser.parseTest(
     `
-    (begin
+    {
       (var x 10)
       (var y "86")
       ((x * 10) + y)
-    )
+    }
     `,
     "10086"
+  );
+  parser.parseTest(
+    `
+    {
+      (var x 1)
+      (var y "24")
+      ((x * 10) + y)
+    }
+    `,
+    "1024"
   );
 };

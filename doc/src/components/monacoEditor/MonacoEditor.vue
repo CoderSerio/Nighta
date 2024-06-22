@@ -37,7 +37,7 @@ export default defineComponent({
     let editor: monaco.editor.IStandaloneCodeEditor;
     const keywords = [
       "var",
-      "begin",
+      "block",
       "set",
       "prop",
       "class",
@@ -57,6 +57,9 @@ export default defineComponent({
           root: [
             [/"([^"\\]*(\\.[^"\\]*)*)"/, "string"],
             [/\d+/, "number"],
+            [/null|undefined/, "comment"],
+            [/false|true/, "string"],
+
             [
               /[a-zA-Z_]\w*/,
               {

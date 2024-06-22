@@ -2,12 +2,12 @@ const assert = require('assert');
 
 module.exports = (nighta) => {
   assert.strictEqual(nighta.eval([
-    'begin',
+    'block',
     ['var', 'counter', 0],
     ['var', 'result', 0],
     ['while',
       ['<=', 'counter', 10],
-      ['begin',
+      ['block',
         ['=', 'result', ['+', 'result', 'counter']],
         ['=', 'counter', ['+', 'counter', 1]]
       ]

@@ -7,7 +7,10 @@
   "browser": "lib/umd/index.umd.js",
   "scripts": {
     "test": "node src/test/index.js",
-    "build": "rollup -c"
+    "doc": "cd doc && npm run dev",
+    "gen": "cd src/parser && powershell -ExecutionPolicy Bypass -File gen.ps1",
+    "build": "rollup -c && copy lib\\esm\\index.esm.js doc\\src\\util\\interpreter.js",
+    "build:all": "npm run gen && npm run test && npm run build"
   },
   "keywords": [],
   "author": "",

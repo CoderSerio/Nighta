@@ -1,44 +1,88 @@
 <template>
-  <d-menu
-    @select="select"
-    @deselect="deselect"
-    @submenu-change="submenuChange"
-    :default-select-keys="['item1']"
-    multiple
-    width="256px"
-  >
-    <d-menu-item key="item1"> Item1 </d-menu-item>
-    <d-menu-item key="item2"> Item2 </d-menu-item>
-    <d-sub-menu title="Setting" key="icon-setting">
-      <template #icon>
-        <i class="icon-setting"></i>
-      </template>
-      <d-menu-item key="setting-item">
-        <span>Setting item</span>
-      </d-menu-item>
-    </d-sub-menu>
+  <d-menu mode="vertical" multiple width="256px">
+    <template v-for="section in props.data" :key="section.title">
+      <RouterLink :to="`/main/${section.title}`">
+        <d-menu-item class="menu-item">
+          <div
+            :style="
+              activeSectionName === section.title
+                ? {
+                    color: '#526ECC',
+                    borderLeft: '2px solid #344899',
+                    paddingLeft: '16px',
+                    transition: '0.1s ease-in',
+                  }
+                : {
+                    color: '#fff',
+                  }
+            "
+          >
+            {{ section.title }}
+          </div>
+        </d-menu-item>
+      </RouterLink>
+    </template>
   </d-menu>
+  <!-- <div class="side-menu-wrapper">
+    <div class="text">
+      {{ props.data }}
+    </div>
+    <template v-for="section in props.data" :key="section.title">
+      <div class="text">
+        {{ section.title }}
+      </div>
+    </template>
+  </div> -->
 </template>
 
-<script>
-import { defineComponent, ref } from "vue";
+<script setup lang="ts">
+import { watch, onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
 
-export default defineComponent({
-  setup() {
-    const select = (e) => {
-      console.log(e);
-    };
-    const deselect = (e) => {
-      console.log(e);
-    };
-    const submenuChange = (e) => {
-      console.log(e);
-    };
-    return {
-      select,
-      deselect,
-      submenuChange,
-    };
-  },
+const activeSectionName = ref();
+
+const props = defineProps<{
+  data: Array<{ title: string; content: string }>;
+}>();
+
+const router = useRouter();
+
+onMounted(() => {
+  const path = props.data?.[0]?.title ?? "404";
+  router.replace(`/main/${path}`);
 });
+
+watch(
+  () => router.currentRoute.value.path,
+  () => {
+    const routerPath = router.currentRoute.value;
+    const sectionName = routerPath.params?.section;
+    activeSectionName.value = sectionName;
+  }
+);
 </script>
+
+<style scoped>
+.side-menu-wrapper {
+  width: 254px;
+  height: calc(100vh - 60px);
+  border-right: 2px solid #333;
+}
+/* .menu-item { */
+/* width: 100%; */
+/* } */
+.text {
+  width: 100%;
+  height: 200px;
+}
+.menu-item {
+}
+
+:deep(.devui-menu-item-select),
+:deep(.devui-menu-item) {
+  background-color: transparent !important;
+}
+:deep(.devui-menu-item-select)::after {
+  display: none;
+}
+</style>

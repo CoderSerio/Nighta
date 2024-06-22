@@ -4,7 +4,7 @@ module.exports = (nighta) => {
   const parser = new Parser(nighta);
   parser.parseTest(
     `
-    (begin
+    (block
       (fun square (x) 
         (* x x)
       )
@@ -15,9 +15,9 @@ module.exports = (nighta) => {
   );
   parser.parseTest(
     `
-    (begin
+    (block
       (fun square (x y) 
-        (begin
+        (block
           (var z 30)
           (* (+ x y) z)
         )
@@ -29,9 +29,9 @@ module.exports = (nighta) => {
   );
   parser.parseTest(
     `
-    (begin
+    (block
       (fun calc (x y) 
-        (begin
+        (block
           (fun sum (a b) (+ a b))
           (sum x y)
         )
@@ -43,7 +43,7 @@ module.exports = (nighta) => {
   );
   parser.parseTest(
     `
-    (begin
+    (block
       (fun sum (a b) (+ a b))
 
       (fun calc (callback x y) 
@@ -57,9 +57,9 @@ module.exports = (nighta) => {
   );
   parser.parseTest(
     `
-    (begin
+    (block
       (fun sayMsg (msg)
-        (begin
+        (block
           (var str "Hi, ")
           (say (+ str msg))
         ) 
@@ -71,7 +71,7 @@ module.exports = (nighta) => {
   // recursive
   parser.parseTest(
     `
-    (begin
+    (block
       (fun sum (x)
         (if (== x 1)
           (say "hi")

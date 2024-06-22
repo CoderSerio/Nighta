@@ -4,7 +4,7 @@ const Parser = require('../parser/Parser');
 module.exports = (nighta) => {
   const parser = new Parser(nighta);
   assert.strictEqual(nighta.eval(
-    ['begin',
+    ['block',
       ['var', 'x', 10],
       ['var', 'y', 10],
       ['if',
@@ -18,7 +18,7 @@ module.exports = (nighta) => {
 
   parser.parseTest(
     `
-    (begin
+    (block
       (var x 100)
       (if (> x 100) 
         (say "x is bigger than 100")

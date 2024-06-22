@@ -1,16 +1,35 @@
 <script setup lang="ts">
-import { ref } from "vue";
-const count = ref(0);
-
-defineProps<{ msg: string }>();
+import sideMenu from "../../components/sideMenu/SideMenu.vue";
+import sectionList from "../../documents/sectionList";
 </script>
 
 <template>
-  <d-button variant="solid"> Solid Button </d-button>
+  <div class="wrapper">
+    <sideMenu :data="sectionList"></sideMenu>
+    <div class="router-view-wrapper">
+      <KeepAlive>
+        <RouterView />
+      </KeepAlive>
+    </div>
+  </div>
 </template>
 
 <style scoped>
-.read-the-docs {
-  color: #888;
+.wrapper {
+  display: flex;
+  width: 100vw;
+  /* overflow: hidden; */
+  height: calc(100vh - 60px);
+}
+.menu {
+  width: 200px;
+}
+.router-view-wrapper {
+  flex: 1;
+}
+.router-view {
+  flex: 1;
+  height: 100%;
+  width: 100%;
 }
 </style>

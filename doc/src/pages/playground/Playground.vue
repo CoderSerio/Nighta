@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import * as monaco from "monaco-editor";
 import MonacoEditor from "../../components/monacoEditor/MonacoEditor.vue";
-import nighta from "../../util/index.esm.js";
+import nighta from "../../util/interpreter.js";
 import { ref } from "vue";
 
 const value = ref('(say "Hello World")');

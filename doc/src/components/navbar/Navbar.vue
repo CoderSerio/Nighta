@@ -10,11 +10,11 @@
     </d-menu-item>
 
     <d-menu-item key="main" class="menu-item">
-      <RouterLink to="/main">参考指南</RouterLink>
+      <RouterLink to="/main/">参考指南</RouterLink>
     </d-menu-item>
 
     <d-menu-item key="playground" class="menu-item">
-      <RouterLink to="/playground">Playground</RouterLink>
+      <RouterLink to="/playground/">Playground</RouterLink>
     </d-menu-item>
   </d-menu>
 </template>

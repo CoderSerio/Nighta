@@ -9,8 +9,9 @@ class Nighta {
     this.transformer = new Transformer();
     this.parser = new Parser(this);
   }
+
   parse(code) {
-    return this.parser.parse(code);
+    return this.parser.parse(`{${code}}`);
   }
 
   eval(exp, env = this.global) {
@@ -27,10 +28,11 @@ class Nighta {
       return exp.slice(1, -1);
     }
 
-    if (exp[0] === 'begin') {
+    if (exp[0] === 'block') {
       const blockEnv = new Environment({}, env);
       return this._evalBlock(exp, blockEnv);
     }
+
 
     if (exp[0] === 'var') {
       const [_tag, name, value] = exp;
@@ -207,7 +209,7 @@ class Nighta {
 
   _evalFunctionBody(body, env) {
     // avoid handling the blocks in a function incorrectly
-    if (body[0] === 'begin') {
+    if (body[0] === 'block') {
       return this._evalBlock(body, env);
     }
     return this.eval(body, env);

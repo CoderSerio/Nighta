@@ -4,9 +4,9 @@ module.exports = (nighta) => {
   const parser = new Parser(nighta);
   parser.parseTest(
     `
-    (begin
-      (fun onClick (callback) (begin
-        (begin
+    (block
+      (fun onClick (callback) (block
+        (block
           (callback)
         )
       ))
@@ -18,7 +18,7 @@ module.exports = (nighta) => {
   // IILE
   parser.parseTest(
     `
-    (begin
+    (block
       (
         (fun (msg) (say msg))
         "Lambda IIFE syntax is ok~"
@@ -29,7 +29,7 @@ module.exports = (nighta) => {
 
   parser.parseTest(
     `
-    (begin
+    (block
       (var sayHi (fun (msg) (say msg)))
       (sayHi "Lambda function can also be used as variable~")
     )

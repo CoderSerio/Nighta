@@ -4,18 +4,18 @@ module.exports = (nighta) => {
   const parser = new Parser(nighta);
   parser.parseTest(
     `
-      (begin
+      (block
         (class Person null
-          (begin
+          (block
             (fun constructor (x y)
-              (begin
+              (block
                 (say "constructor!")
                 (= (prop self x) x)
                 (= (prop self y) y)
               )
             )
             (fun sum ()
-              (begin
+              (block
                 (var res 
                   (+ (prop self x) (prop self y)))
                 (say (+ "The res is " res))
@@ -32,9 +32,9 @@ module.exports = (nighta) => {
 
   parser.parseTest(
     `
-      (begin
+      (block
         (class Person null
-          (begin
+          (block
             (fun constructor (x)
               (= (prop self x) x)
             )
@@ -56,9 +56,9 @@ module.exports = (nighta) => {
   // Individual instance and its property 
   parser.parseTest(
     `
-      (begin
+      (block
         (class Person null
-          (begin
+          (block
             (fun constructor (x)
               (= (prop self x) x)
             )
@@ -80,9 +80,9 @@ module.exports = (nighta) => {
   // 
   parser.parseTest(
     `
-      (begin
+      (block
         (class Person null
-          (begin
+          (block
             (fun constructor (x)
               (= (prop self x) x)
             )
@@ -94,9 +94,9 @@ module.exports = (nighta) => {
         )
 
         (class Worker Person
-          (begin
+          (block
             (fun constructor () 
-              (begin
+              (block
                 (info)
               )
             )

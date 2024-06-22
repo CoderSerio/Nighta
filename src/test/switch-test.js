@@ -4,7 +4,7 @@ module.exports = (nighta) => {
   const parser = new Parser(nighta);
   parser.parseTest(
     `
-    (begin
+    (block
       (var x 100)
       (switch 
         ((> x 100) "bigger")
@@ -18,7 +18,7 @@ module.exports = (nighta) => {
 
   parser.parseTest(
     `
-    (begin
+    (block
       (var x 10)
       (switch 
         ((> x 100) "bigger")
@@ -32,7 +32,7 @@ module.exports = (nighta) => {
 
   parser.parseTest(
     `
-    (begin
+    (block
       (var x 1000)
       (switch 
         ((> x 100) "bigger")
