@@ -293,11 +293,69 @@ const nighta = new Nighta(new Environment({
   '&': (v1, v2) => v1 & v2,
   '|': (v1, v2) => v1 | v2,
   say: (...args) => {
-    const res = args.reduce((prev, cur) => prev + cur);
-    console.dir(res, { depth: null });
+    let res;
+    if (args.length > 1) {
+      res = args.reduce((prev, cur) => prev + cur, '');
+      console.log(res);
+    } else {
+      res = args[0];
+      console.dir(res, { depth: null });
+    }
     return res;
   },
 }));
+
+const List = nighta.eval(nighta.parse(`
+  (class List null {
+    (fun constructor (len) {
+      (self["len"] = len)
+      (var i 0)
+      (while (i < len) {
+        (self[i] = 0)
+        (i = (i + 1))
+      })
+    })
+
+    (fun push (item) {
+      (self[self["len"]] = item)
+      (self["len"] = (self["len"] + 1))
+    })
+
+    (fun pop () {
+      (self[self["len"]] = undefined)
+      (self["len"] = (self["len"] - 1))
+    })
+
+    (fun shift () {
+      (var i 0)
+      (while (i < (self["len"] - 1)) {
+        (self[i] = self[(i + 1)])
+        (i = (i + 1))
+      })
+      (self[self["len"]] = undefined)
+      (self["len"] = (self["len"] - 1))
+    })
+
+    (fun unshift (item) {
+      (self["len"] = (self["len"] + 1))
+      (var i self["len"])
+      (while (i > 0) {
+        (self[i] = self[(i - 1)])
+        (i = (i - 1))
+      })
+      (self[0] = item)
+    })
+
+    (fun map (callback) {
+      (var _mapCounter 0)
+      (while (_mapCounter < self["len"]) {
+        (callback self[_mapCounter] _mapCounter)
+        (_mapCounter = (1 + _mapCounter))
+      })
+    })
+  })
+`), nighta.global);
+nighta.global.define("List", List);
 
 
 module.exports = nighta;

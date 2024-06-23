@@ -52,12 +52,5 @@ BlockEntries
   ;
 
 PropertyInvoke
-  : Atom '[' PropertyName ']'   { $$ = ["prop", $1, $3] }
-  ;
-
-PropertyName
-  : List
-  | STRING
-  | Number { $$ = String($1) }
-  | SYMBOL
+  : Atom '[' Exp ']'   { $$ = ["prop", $1, $3] }
   ;

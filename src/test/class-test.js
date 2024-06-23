@@ -106,12 +106,12 @@ module.exports = (nighta) => {
           (fun constructor () {})
 
           (fun get () {
-            (say "This is OOP: ")
+            (say "This is OOP: " self[key])
           })
 
           (fun set (key value) {
             (self[key] = value)
-            (say "parent class property name: " self[key])
+            (say "property name: " self[key])
           })
         })
 
@@ -121,6 +121,31 @@ module.exports = (nighta) => {
 
         (var worker (new Worker))
         (worker["set"] "name" "good boy")
+      }
+    `
+  );
+
+  parser.parseTest(
+    `
+      {
+        (var arr (new List 10))
+
+        (fun iterator () {
+          (arr["map"]
+            (fun (item index) {
+              (say "arr[" index "] -----> " arr[index])
+            })
+          )
+        })
+
+        (arr["push"] "one")
+        (arr["push"] "two")
+        (arr["pop"])
+        (arr["unshift"] "one")
+        (arr["unshift"] "two")
+        (arr["shift"])
+
+        (iterator)
       }
     `
   );
