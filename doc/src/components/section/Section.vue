@@ -25,7 +25,7 @@ watch(
   () => {
     const routerPath = router.currentRoute.value;
     const sectionName = routerPath.params?.section;
-    console.log(sectionName, sectionList);
+    // console.log(sectionName, sectionList);
     let isMatched = false;
     for (const section of sectionList) {
       if (section.title === sectionName) {

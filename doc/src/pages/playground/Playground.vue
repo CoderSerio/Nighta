@@ -2,21 +2,39 @@
 import * as monaco from "monaco-editor";
 import MonacoEditor from "../../components/monacoEditor/MonacoEditor.vue";
 import nighta from "../../util/interpreter.js";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 
 const value = ref('(say "Hello World")');
 const result = ref("还没有执行代码");
+const isValid = ref(true);
 
 const editorMounted = (editor: monaco.editor.IStandaloneCodeEditor) => {
-  console.log("editor实例加载完成", editor);
-  console.log("nighta解释器加载完成", nighta.parse);
+  // console.log("editor 实例加载完成", editor);
+  // console.log("nighta 解释器加载完成", nighta.parse);
 };
-const runCode = () => {
-  const exp = nighta.parse(value.value);
-  const res = nighta.eval(exp);
 
-  result.value = res;
+const runCode = () => {
+  try {
+    //TODO: 防抖节流
+    console.error();
+    const exp = nighta.parse(value.value);
+    const res = nighta.eval(exp);
+    isValid.value = true;
+    result.value = [...window.codeOutputList];
+    localStorage.setItem("nighta-playground-code-cache", value.value);
+  } catch (err) {
+    console.error();
+    isValid.value = false;
+    result.value = `${err}`;
+  }
 };
+
+onMounted(() => {
+  const cacheCode = localStorage.getItem("nighta-playground-code-cache");
+  if (cacheCode) {
+    value.value = cacheCode;
+  }
+});
 </script>
 
 <template>
@@ -34,7 +52,19 @@ const runCode = () => {
       </div>
     </div>
     <div class="result-container">
-      <div class="result">{{ result }}</div>
+      <div
+        class="result"
+        :style="isValid ? { color: 'yellow' } : { color: 'red' }"
+      >
+        <template v-if="result instanceof Array">
+          <template v-for="item in result">
+            <div>{{ item }}</div>
+          </template>
+        </template>
+        <template v-else>
+          {{ result }}
+        </template>
+      </div>
     </div>
   </div>
 </template>
@@ -70,6 +100,5 @@ const runCode = () => {
 .result {
   height: 100%;
   padding: 6px;
-  color: yellow;
 }
 </style>

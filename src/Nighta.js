@@ -220,7 +220,7 @@ class Nighta {
       }
     }
 
-    throw `Unimplemented Syntax: ${JSON.stringify(exp)}`;
+    throw `Invalid Syntax: ${JSON.stringify(exp)}`;
   }
 
   _callUserDefinedFunction(fn, args, env) {

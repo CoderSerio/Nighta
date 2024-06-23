@@ -1,21 +1,21 @@
 <template>
   <d-menu mode="horizontal" :default-select-keys="['/#']" class="menu-wrapper">
-    <d-menu-item key="home" class="menu-item">
-      <RouterLink to="/">
+    <RouterLink to="/">
+      <d-menu-item key="home" class="menu-item">
         <d-icon
           name="https://devui.design/components/assets/logo.svg"
           size="32px"
         ></d-icon>
-      </RouterLink>
-    </d-menu-item>
+      </d-menu-item>
+    </RouterLink>
 
-    <d-menu-item key="main" class="menu-item">
-      <RouterLink to="/main/">参考指南</RouterLink>
-    </d-menu-item>
+    <RouterLink to="/main/">
+      <d-menu-item key="main" class="menu-item"> 参考指南 </d-menu-item>
+    </RouterLink>
 
-    <d-menu-item key="playground" class="menu-item">
-      <RouterLink to="/playground/">Playground</RouterLink>
-    </d-menu-item>
+    <RouterLink to="/playground/">
+      <d-menu-item key="playground" class="menu-item"> Playground </d-menu-item>
+    </RouterLink>
   </d-menu>
 </template>
 

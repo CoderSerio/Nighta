@@ -7,6 +7,19 @@ import "@devui-design/icons/icomoon/devui-icon.css";
 import { ThemeServiceInit, infinityTheme, galaxyTheme } from "devui-theme";
 import router from "./router/router";
 
+window.codeOutputList = []
+console.originalLog = console.log;
+console.log = (content: any) => {
+  console.originalLog(content);
+  window.codeOutputList.push(content)
+};
+
+// so amazing, it doesn't trigger the overwrite
+console.originalError = console.error
+console.error = (content: any) => {
+  console.originalError(content)
+  window.codeOutputList = []
+}
 
 ThemeServiceInit({ infinityTheme }, "infinityTheme")?.applyTheme(galaxyTheme);
 

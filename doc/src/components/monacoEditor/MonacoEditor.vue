@@ -46,6 +46,7 @@ export default defineComponent({
       "switch",
       "while",
       "fun",
+      "self",
     ];
 
     const codeEditBox = ref();
@@ -71,11 +72,8 @@ export default defineComponent({
             ],
             [/[()]/, { token: "delimiter.parenthesis" }],
 
-            // 假设 begin-end 是一种代码块的界定，这里简单处理作为示例
             // [/begin\b/, { token: "keyword.control" }, "@block.start"],
             // [/end\b/, { token: "keyword.control" }, "@pop"],
-
-            // 新的状态用来匹配begin-end之间的内容
             // ["@block.start", "", { token: "" }, "@block.inner"],
             // ["@block.inner", /./, { token: "" }, "@block.inner"],
           ],
