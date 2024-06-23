@@ -1,6 +1,9 @@
 const assert = require('assert');
+const Parser = require('../parser/Parser');
 
 module.exports = (nighta) => {
+  const parser = new Parser(nighta);
+
   assert.strictEqual(nighta.eval([
     'block',
     ['var', 'counter', 0],
@@ -16,4 +19,13 @@ module.exports = (nighta) => {
   ]),
     55
   );
+
+  parser.parse(`
+    {
+      (var i 0)
+      (while (i < 10) {
+        (i = (i + 1))
+      })    
+    }  
+  `);
 };

@@ -14,6 +14,12 @@ console.log = (content: any) => {
   window.codeOutputList.push(content)
 };
 
+console.oldDir = console.dir;
+console.dir = (content: any) => {
+  console.oldDir(content)
+  window.codeOutputList.push(content)
+}
+
 // so amazing, it doesn't trigger the overwrite
 console.originalError = console.error
 console.error = (content: any) => {

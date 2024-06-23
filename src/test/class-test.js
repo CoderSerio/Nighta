@@ -2,56 +2,56 @@ const Parser = require('../parser/Parser');
 
 module.exports = (nighta) => {
   const parser = new Parser(nighta);
-  // parser.parseTest(
-  //   `
-  //     (block
-  //       (class Person null {
-  //           (fun constructor (x y) {
-  //               (say "constructor!")
-  //               (self["x"] = x)
-  //               (self["y"] = y)
-  //               (self["sum"] = sum)
-  //             }
-  //           )  
+  parser.parseTest(
+    `
+      (block
+        (class Person null {
+            (fun constructor (x y) {
+                (say "constructor!")
+                (self["x"] = x)
+                (self["y"] = y)
+                (self["sum"] = sum)
+              }
+            )  
 
-  //           (fun sum () {
-  //             (var res 
-  //               (self["x"] + self["y"]) 
-  //             )
-  //             (var msg "The res is ")
-  //             (say msg res)
-  //           })
-  //         }
-  //       )
+            (fun sum () {
+              (var res 
+                (self["x"] + self["y"]) 
+              )
+              (var msg "The res is ")
+              (say msg res)
+            })
+          }
+        )
 
-  //       (var person (new Person 10 20))
-  //       (person["sum"])
-  //     )
-  //   `
-  // );
+        (var person (new Person 10 20))
+        (person["sum"])
+      )
+    `
+  );
 
-  // parser.parseTest(
-  //   `
-  //     (block
-  //       (class Person null
-  //         (block
-  //           (fun constructor (x)
-  //             (self["x"] = x)
-  //           )
-  //         )
-  //       )
+  parser.parseTest(
+    `
+      (block
+        (class Person null
+          (block
+            (fun constructor (x)
+              (self["x"] = x)
+            )
+          )
+        )
 
-  //       (var person1 (new Person 1))
-  //       (var person2 (new Person 2))
-  //       (say person1["x"])
-  //       (say person2["x"])
-  //       (say person1["x"])
-  //       (person1["x"] = 3)
-  //       (say person1["x"])        
-  //       (say person2["x"])        
-  //     )
-  //   `
-  // );
+        (var person1 (new Person 1))
+        (var person2 (new Person 2))
+        (say person1["x"])
+        (say person2["x"])
+        (say person1["x"])
+        (person1["x"] = 3)
+        (say person1["x"])        
+        (say person2["x"])        
+      )
+    `
+  );
 
   // Individual instance and its property 
   parser.parseTest(

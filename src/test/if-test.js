@@ -6,7 +6,7 @@ module.exports = (nighta) => {
 
   parser.parseTest(
     `
-    (block
+    {
       (var x 100)
       (if (> x 100) 
         (say "x is bigger than 100")
@@ -15,7 +15,20 @@ module.exports = (nighta) => {
             (say "x is equal to 100")
         )
       )
-    )
+    }
+    `,
+  );
+
+  parser.parseTest(
+    `
+    {
+      (var x 100)
+      (if (> x 100) {
+        (say "bigger")
+      } {
+        (say "smaller")
+      })
+    }
     `,
   );
 };
