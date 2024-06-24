@@ -299,7 +299,7 @@ const nighta = new Nighta(new Environment({
       console.log(res);
     } else {
       res = args[0];
-      console.dir(res, { depth: null });
+      console.dir(res, { depth: 3 });
     }
     return res;
   },

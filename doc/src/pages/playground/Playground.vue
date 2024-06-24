@@ -3,9 +3,10 @@ import * as monaco from "monaco-editor";
 import MonacoEditor from "../../components/monacoEditor/MonacoEditor.vue";
 import nighta from "../../util/interpreter.js";
 import { onMounted, ref } from "vue";
+import safeJsonStringify from "../../util/safeJsonStringify";
 
-const value = ref('(say "Hello World")');
-const result = ref("还没有执行代码");
+const value = ref<string | Array<any>>('(say "Hello World")');
+const result = ref<string | Array<any>>("还没有执行代码");
 const isValid = ref(true);
 
 const editorMounted = (editor: monaco.editor.IStandaloneCodeEditor) => {
@@ -20,12 +21,13 @@ const runCode = () => {
     const exp = nighta.parse(value.value);
     const res = nighta.eval(exp);
     isValid.value = true;
-    result.value = [...window.codeOutputList];
+    result.value = window.codeOutputList.map(safeJsonStringify);
     localStorage.setItem("nighta-playground-code-cache", value.value);
   } catch (err) {
     console.error();
     isValid.value = false;
     result.value = `${err}`;
+    throw err;
   }
 };
 

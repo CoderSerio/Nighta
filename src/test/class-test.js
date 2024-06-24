@@ -149,4 +149,11 @@ module.exports = (nighta) => {
       }
     `
   );
+
+  parser.parseTest(`
+  {
+    (var list (new List 1000))
+    (say list)
+  }
+  `);
 };

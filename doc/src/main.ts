@@ -14,9 +14,9 @@ console.log = (content: any) => {
   window.codeOutputList.push(content)
 };
 
-console.oldDir = console.dir;
+console.originalDir = console.dir;
 console.dir = (content: any) => {
-  console.oldDir(content)
+  console.originalDir(content)
   window.codeOutputList.push(content)
 }
 
