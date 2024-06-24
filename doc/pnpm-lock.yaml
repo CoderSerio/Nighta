@@ -14,6 +14,9 @@ importers:
       devui-theme:
         specifier: ^0.0.7
         version: 0.0.7
+      monaco-editor:
+        specifier: ^0.50.0
+        version: 0.50.0
       vue:
         specifier: ^3.4.21
         version: 3.4.29(typescript@5.4.5)
@@ -895,6 +898,9 @@ packages:
 
   monaco-editor@0.34.0:
     resolution: {integrity: sha512-VF+S5zG8wxfinLKLrWcl4WUizMx+LeJrG4PM/M78OhcwocpV0jiyhX/pG6Q9jIOhrb/ckYi6nHnaR5OojlOZCQ==}
+
+  monaco-editor@0.50.0:
+    resolution: {integrity: sha512-8CclLCmrRRh+sul7C08BmPBP3P8wVWfBHomsTcndxg5NRCEPfu/mc2AGU8k37ajjDVXcXFc12ORAMUkmk+lkFA==}
 
   muggle-string@0.4.1:
     resolution: {integrity: sha512-VNTrAak/KhO2i8dqqnqnAHOa3cYBwXEZe9h+D5h/1ZqFSTEFHdM65lR7RoIqq3tBBYavsOXV84NoHXZ0AkPyqQ==}
@@ -1957,6 +1963,8 @@ snapshots:
   moment-mini@2.29.4: {}
 
   monaco-editor@0.34.0: {}
+
+  monaco-editor@0.50.0: {}
 
   muggle-string@0.4.1: {}
 

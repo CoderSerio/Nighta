@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc --skipLibCheck && vite build",
+    "build": "vue-tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -13,7 +13,8 @@
     "devui-theme": "^0.0.7",
     "vue": "^3.4.21",
     "vue-devui": "^1.6.20",
-    "vue-router": "4"
+    "vue-router": "4",
+    "monaco-editor": "^0.50.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",
