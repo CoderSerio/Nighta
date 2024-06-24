@@ -6,7 +6,7 @@ import Section from "../components/section/Section.vue"
 import Playground from "../pages/playground/Playground.vue"
 import sectionList from "../documents/sectionList";
 
-const routes = [
+const routes: any = [
   { path: "/", meta: { KeepAlive: true }, component: Home },
   { path: "/main", meta: { KeepAlive: true }, component: Main, redirect: `/main/${sectionList[0].title}`, children: [{ path: ':section', component: Section }] },
   { path: "/playground", meta: { KeepAlive: true }, component: Playground }

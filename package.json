@@ -10,7 +10,9 @@
     "doc": "cd doc && npm run dev",
     "gen": "cd src/parser && powershell -ExecutionPolicy Bypass -File gen.ps1",
     "build": "rollup -c && copy lib\\esm\\index.esm.js doc\\src\\util\\interpreter.js",
-    "build:all": "npm run gen && npm run test && npm run build"
+    "build:all": "npm run gen && npm run test && npm run build",
+    "preview": "cd doc && npm run build && npm run preview",
+    "publish:doc": "git subtree push --prefix dist origin gh-pages"
   },
   "keywords": [],
   "author": "",

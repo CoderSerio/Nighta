@@ -1,13 +1,10 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
 
 const linkTo = (path: string) => {
   router.push(path);
 };
-
-const count = ref(0);
 </script>
 
 <template>

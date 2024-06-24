@@ -21,14 +21,14 @@ class Nighta {
     // console.log(env);
     // console.log('======================================');
     if (this._isNumber(exp)) {
+      if (+exp < 0) {
+        console.log('???', +exp === -1);
+        return +exp;
+      }
       return exp;
-    }
-
-    if (this._isString(exp)) {
+    } else if (this._isString(exp)) {
       return exp.slice(1, -1);
-    }
-
-    if (this._isUndefined(exp)) {
+    } else if (this._isUndefined(exp)) {
       return undefined;
     }
 
@@ -220,7 +220,7 @@ class Nighta {
       }
     }
 
-    throw `Invalid Syntax: ${JSON.stringify(exp)}`;
+    throw `Invalid Syntax: ${JSON.stringify(exp)}\n\n${JSON.stringify(env)}`;
   }
 
   _callUserDefinedFunction(fn, args, env) {
@@ -257,6 +257,9 @@ class Nighta {
   }
 
   _isNumber(exp) {
+    if (typeof exp === 'string') {
+      return /^-\d+$/.test(exp);
+    }
     return typeof exp === 'number';
   }
 
@@ -292,21 +295,25 @@ const nighta = new Nighta(new Environment({
   '||': (v1, v2) => v1 || v2,
   '&': (v1, v2) => v1 & v2,
   '|': (v1, v2) => v1 | v2,
+  integer: (num) => Math.floor(num),
   say: (...args) => {
     let res;
     if (args.length > 1) {
       res = args.reduce((prev, cur) => prev + cur, '');
       console.log(res);
     } else {
-      res = args[0];
+      // if (args[0].record) {
+      //   res = args[0].record;
+      // } else {
+      res = args?.[0];
+      // }
       console.dir(res, { depth: 3 });
     }
     return res;
   },
 }));
 
-const List = nighta.eval(nighta.parse(`
-  (class List null {
+const List = nighta.eval(nighta.parse(`(class List null {
     (fun constructor (len) {
       (self["len"] = len)
       (var i 0)
@@ -355,6 +362,7 @@ const List = nighta.eval(nighta.parse(`
     })
   })
 `), nighta.global);
+
 nighta.global.define("List", List);
 
 

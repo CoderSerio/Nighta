@@ -1,5 +1,3 @@
-import { jsx } from "vue/jsx-runtime";
-
 const sectionList = [
   {
     title: `快速开始`,

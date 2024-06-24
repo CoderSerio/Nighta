@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import * as monaco from "monaco-editor";
+// import * as monaco from "monaco-editor";
 import MonacoEditor from "../../components/monacoEditor/MonacoEditor.vue";
 import nighta from "../../util/interpreter.js";
 import { onMounted, ref } from "vue";
@@ -9,7 +9,7 @@ const value = ref<string | Array<any>>('(say "Hello World")');
 const result = ref<string | Array<any>>("还没有执行代码");
 const isValid = ref(true);
 
-const editorMounted = (editor: monaco.editor.IStandaloneCodeEditor) => {
+const editorMounted = (/*editor: monaco.editor.IStandaloneCodeEditor*/) => {
   // console.log("editor 实例加载完成", editor);
   // console.log("nighta 解释器加载完成", nighta.parse);
 };
@@ -19,10 +19,10 @@ const runCode = () => {
     //TODO: 防抖节流
     console.error();
     const exp = nighta.parse(value.value);
-    const res = nighta.eval(exp);
+    nighta.eval(exp);
     isValid.value = true;
     result.value = window.codeOutputList.map(safeJsonStringify);
-    localStorage.setItem("nighta-playground-code-cache", value.value);
+    localStorage.setItem("nighta-playground-code-cache", value.value as string);
   } catch (err) {
     console.error();
     isValid.value = false;

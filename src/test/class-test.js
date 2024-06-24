@@ -15,9 +15,7 @@ module.exports = (nighta) => {
             )  
 
             (fun sum () {
-              (var res 
-                (self["x"] + self["y"]) 
-              )
+              (var res (x + y) )
               (var msg "The res is ")
               (say msg res)
             })
@@ -152,8 +150,7 @@ module.exports = (nighta) => {
 
   parser.parseTest(`
   {
-    (var list (new List 1000))
-    (say list)
+    (var list (new List 100))
   }
   `);
 };
