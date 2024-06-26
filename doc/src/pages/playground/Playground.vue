@@ -1,3 +1,35 @@
+<template>
+  <div class="wrapper">
+    <div class="editor-container">
+      <div class="header">
+        <div class="name">Nighta Playground</div>
+        <d-button variant="solid" @click="runCode"> 运行代码 </d-button>
+      </div>
+      <div class="editor">
+        <MonacoEditor
+          v-model="value"
+          @editor-mounted="editorMounted"
+        ></MonacoEditor>
+      </div>
+    </div>
+    <div class="result-container">
+      <div
+        class="result"
+        :style="isValid ? { color: 'yellow' } : { color: 'red' }"
+      >
+        <template v-if="result instanceof Array">
+          <template v-for="item in result">
+            <div>{{ item }}</div>
+          </template>
+        </template>
+        <template v-else>
+          {{ result }}
+        </template>
+      </div>
+    </div>
+  </div>
+</template>
+
 <script lang="ts" setup>
 // import * as monaco from "monaco-editor";
 import MonacoEditor from "../../components/monacoEditor/MonacoEditor.vue";
@@ -39,38 +71,6 @@ onMounted(() => {
 });
 </script>
 
-<template>
-  <div class="wrapper">
-    <div class="editor-container">
-      <div class="header">
-        <div class="name">Nighta Playground</div>
-        <d-button variant="solid" @click="runCode"> 运行代码 </d-button>
-      </div>
-      <div class="editor">
-        <MonacoEditor
-          v-model="value"
-          @editor-mounted="editorMounted"
-        ></MonacoEditor>
-      </div>
-    </div>
-    <div class="result-container">
-      <div
-        class="result"
-        :style="isValid ? { color: 'yellow' } : { color: 'red' }"
-      >
-        <template v-if="result instanceof Array">
-          <template v-for="item in result">
-            <div>{{ item }}</div>
-          </template>
-        </template>
-        <template v-else>
-          {{ result }}
-        </template>
-      </div>
-    </div>
-  </div>
-</template>
-
 <style scoped>
 .wrapper {
   display: flex;
@@ -98,6 +98,7 @@ onMounted(() => {
 }
 .result-container {
   flex: 1;
+  min-width: 120px;
 }
 .result {
   height: 100%;

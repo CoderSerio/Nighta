@@ -13,6 +13,7 @@ import Navbar from "./components/navbar/Navbar.vue";
 
 <style scoped>
 .router-view-wrapper {
+  background-color: #252b3a;
 }
 
 .logo:hover {

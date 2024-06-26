@@ -1,5 +1,5 @@
 <template>
-  <d-menu mode="vertical" multiple width="256px">
+  <d-menu mode="vertical" multiple width="108px">
     <template v-for="section in props.data" :key="section.title">
       <RouterLink :to="`/main/${section.title}`">
         <d-menu-item class="menu-item">
@@ -8,7 +8,7 @@
               activeSectionName === section.title
                 ? {
                     color: '#526ECC',
-                    borderLeft: '2px solid #344899',
+                    borderLeft: '4px solid #344899',
                     paddingLeft: '16px',
                     transition: '0.1s ease-in',
                   }
@@ -67,6 +67,7 @@ watch(
   width: 254px;
   height: calc(100vh - 60px);
   border-right: 2px solid #333;
+  background-color: red;
 }
 /* .menu-item { */
 /* width: 100%; */

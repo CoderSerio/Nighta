@@ -25,7 +25,7 @@ Nighta 是一个基于 JavaScript 实现的跨平台语言，语法类似于 Lis
 
 TODO: 在不久的将来将会开放下载。
 
-当前可以在 [Playground](/#/playground) 中进行体验。
+当前可以在 [Playground](https://coderserio.github.io/Nighta/#/playground/) 中进行体验。
 
 具体用法请参考本文档左侧菜单中的各个栏目。
 > 当前仅提供了相关语法的案例，更细致的描述会在未来进行补充。
