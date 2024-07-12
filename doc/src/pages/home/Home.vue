@@ -2,6 +2,10 @@
 import { useRouter } from "vue-router";
 const router = useRouter();
 
+const openLink = () => {
+  window.open("https://github.com/CoderSerio/Nighta");
+};
+
 const linkTo = (path: string) => {
   router.push(path);
 };
@@ -14,9 +18,12 @@ const linkTo = (path: string) => {
         <div class="title">Nighta</div>
         <div class="description">一夜之间诞生的脚本语言</div>
       </div>
-      <d-button variant="solid" @click="linkTo('/main')" class="button">
-        从这里开始
-      </d-button>
+      <div class="button-wrapper">
+        <d-button variant="solid" @click="linkTo('/main')" class="button">
+          开始体验
+        </d-button>
+        <d-button @click="openLink()" class="button"> GitHub </d-button>
+      </div>
     </div>
 
     <div class="image-wrapper">
@@ -103,10 +110,20 @@ const linkTo = (path: string) => {
   flex-direction: column;
   justify-content: center;
   text-align: center;
-  gap: 4rem;
+  gap: 3rem;
 }
 
 .description {
   font-size: 2rem;
+}
+
+.button-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: space-between;
+  gap: 1em;
+  .button {
+    width: 40%;
+  }
 }
 </style>
